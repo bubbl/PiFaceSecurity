@@ -58,6 +58,7 @@ class cmenu(object):
             screen.clear()
             screen.addstr(2, 2, self.title, curses.A_STANDOUT|curses.A_BOLD)
             screen.addstr(4, 2, "Please select an option...", curses.A_BOLD)
+            screen.addstr(8, 2, "Press 'Q' to exit.", curses.A_BOLD)
 
             ckey = None
             func = None
@@ -80,6 +81,9 @@ class cmenu(object):
                 if ckey == 259:
                     self.downKey()
 
+                if ckey == ord('q'):
+                    exit()
+
             ckey = 0
             self.cleanup()
             if self.pos >= 0 and self.pos < len(self.ordered):
@@ -87,8 +91,6 @@ class cmenu(object):
                 self.pos = -1
             else:
                 curses.flash()
-
-
 
 def doors():
     os.system("less /var/log/security.log")
