@@ -93,12 +93,16 @@ class cmenu(object):
 def doors():
     os.system("less /var/log/security.log")
 
+def top():
+    os.system("top")
+
 def exit():
     sys.exit(1)
 
 try:
     c = cmenu([
         { "Doors/Windows": doors },
+        { "Top": top },
         { "Exit": exit },
         ])
     c.display()
