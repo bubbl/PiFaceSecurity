@@ -58,8 +58,8 @@ class cmenu(object):
             screen.clear()
             screen.addstr(2, 2, self.title, curses.A_STANDOUT|curses.A_BOLD)
             screen.addstr(4, 2, "Please select an option...", curses.A_BOLD)
-            screen.addstr(11, 2, "------------------", curses.A_BOLD)
-            screen.addstr(12, 2, "Press 'Q' to exit.", curses.A_BOLD)
+            screen.addstr(15, 2, "------------------", curses.A_BOLD)
+            screen.addstr(16, 2, "Press 'Q' to exit.", curses.A_BOLD)
 
             ckey = None
             func = None
@@ -94,7 +94,7 @@ class cmenu(object):
                 curses.flash()
 
 def security():
-    os.system("nohup python security.py &")
+    os.system("python security.py &")
 
 def doors():
     os.system("less /var/log/security.log")
@@ -108,7 +108,7 @@ def exit():
 try:
     c = cmenu([
         { "Start Security System": security },
-        { "Check Security Log": doors },
+        { "Show Security Log": doors },
         { "Top": top },
         { "Exit": exit },
         ])
