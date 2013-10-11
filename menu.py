@@ -34,9 +34,9 @@ while x != ord('5'):
     screen.addstr(2, 2, "Chose an option:")
     screen.addstr(4, 4, "1 - Start Security Service")
     screen.addstr(5, 4, "2 - Show Security Log")
-    screen.addstr(6, 4, "3 - Show disk space")
-    screen.addstr(7, 4, "4 - Run top")
-    screen.addstr(8, 4, "5 - Exit")
+    screen.addstr(7, 4, "3 - Show disk space")
+    screen.addstr(8, 4, "4 - Run top")
+    screen.addstr(10, 4, "5 - Exit")
     screen.refresh()
 
     x = screen.getch()
