@@ -1,120 +1,57 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
-import signal
-signal.signal(signal.SIGINT, signal.SIG_IGN)
-
-import os
-import sys
+from os import system
 import curses
-import traceback
-import atexit
-import time
 
-class cmenu(object):
-    datum = {}
-    ordered = []
-    pos = 0
+def get_param(prompt_string):
+    screen.clear()
+    screen.border(0)
+    screen.addstr(2, 2, prompt_string)
+    screen.refresh()
+    input = screen.getstr(10, 10, 60)
+    return input
 
-    def __init__(self, options, title="Home System Security"):
-        curses.initscr()
-        curses.start_color()
-        curses.init_pair(1, curses.COLOR_RED, curses.COLOR_WHITE)
-        curses.curs_set(0)
-        self.screen = curses.initscr()
-        self.screen.keypad(1)
+def execute_cmd(cmd_string):
+    system("clear")
+    a = system(cmd_string)
+    print ""
+    if a == 0:
+        print "Command executed correctly"
+    else:
+        print "Command terminated with error"
+    raw_input("Press enter")
+    print ""
 
-        self.h = curses.color_pair(1)
-        self.n = curses.A_NORMAL
+x = 0
 
-        for item in options:
-            k, v = item.items()[0]
-            self.datum[k] = v
-            self.ordered.append(k)
+while x != ord('5'):
+    screen = curses.initscr()
 
-        self.title = title
+    screen.clear()
+    curses.start_color()
+    curses.init_pair(1, curses.COLOR_RED, curses.COLOR_WHITE)
+    screen.border(0)
+    screen.addstr(2, 2, "Chose an option:")
+    screen.addstr(4, 4, "1 - Start Security Service")
+    screen.addstr(5, 4, "2 - Show Security Log")
+    screen.addstr(6, 4, "3 - Show disk space")
+    screen.addstr(7, 4, "4 - Run top")
+    screen.addstr(8, 4, "5 - Exit")
+    screen.refresh()
 
-        atexit.register(self.cleanup)
+    x = screen.getch()
 
-    def cleanup(self):
-        curses.doupdate()
+    if x == ord('1'):
         curses.endwin()
+        execute_cmd("python security.py &")
+    if x == ord('2'):
+        curses.endwin()
+        execute_cmd("less /var/log/security.log")
+    if x == ord('3'):
+        curses.endwin()
+        execute_cmd("df -h")
+    if x == ord('4'):
+        curses.endwin()
+        execute_cmd("top")
 
-    def upKey(self):
-        if self.pos == (len(self.ordered) - 1):
-            self.pos = 0
-        else:
-            self.pos += 1
-
-    def downKey(self):
-        if self.pos <= 0:
-            self.pos = len(self.ordered) - 1
-        else:
-            self.pos -= 1
-
-    def display(self):
-        screen = self.screen
-
-        while True:
-            screen.clear()
-            screen.addstr(2, 2, self.title, curses.A_STANDOUT|curses.A_BOLD)
-            screen.addstr(4, 2, "Please select an option...", curses.A_BOLD)
-            screen.addstr(15, 2, "------------------", curses.A_BOLD)
-            screen.addstr(16, 2, "Press 'Q' to exit.", curses.A_BOLD)
-
-            ckey = None
-            func = None
-
-            while ckey != ord('\n'):
-                for n in range(0, len(self.ordered)):
-                    optn = self.ordered[n]
-
-                    if n != self.pos:
-                        screen.addstr(5 + n, 4, "%d. %s" % (n, optn), self.n)
-                    else:
-                        screen.addstr(5 + n, 4, "%d. %s" % (n, optn), self.h)
-                screen.refresh()
-
-                ckey = screen.getch()
-
-                if ckey == 258:
-                    self.upKey()
-
-                if ckey == 259:
-                    self.downKey()
-
-                if ckey == ord('q'):
-                    exit()
-
-            ckey = 0
-            self.cleanup()
-            if self.pos >= 0 and self.pos < len(self.ordered):
-                self.datum[self.ordered[self.pos]]()
-                self.pos = -1
-            else:
-                curses.flash()
-
-def security():
-    os.system("python security.py &")
-
-def doors():
-    os.system("less /var/log/security.log")
-
-def top():
-    os.system("top")
-
-def exit():
-    sys.exit(1)
-
-try:
-    c = cmenu([
-        { "Start Security System": security },
-        { "Show Security Log": doors },
-        { "Top": top },
-        { "Exit": exit },
-        ])
-    c.display()
-
-except SystemExit:
-    pass
-else:
-    c.cleanup()
+curses.endwin()
